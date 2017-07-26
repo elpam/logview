@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Log View</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="./node_modules/admin-lte/dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="./node_modules/admin-lte/dist/css/skins/skin-blue.min.css">
+  <script src="parse_log.js"></script>    
+
+  <style>
+    .header h2 {
+      padding-left: 15px;
+    }
+
+    .content h3 {
+      margin-top: 0;
+    }
+
+    .grid-base {
+      border-top: 4px solid #00D4E1;
+      background: #FFF;
+      color: rgb(36, 36, 36);
+      font-weight: normal;
+      margin-top: 5px;
+      padding: 7px;      
+    }
+
+    .grid-title {
+        font-size: 85%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-shadow: 1px 1px 0 #FFF;
+        white-space: nowrap;
+        width: 100%;
+    }
+      
+    .grid-base h3 {
+        font-size: 25px;
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+    }    
+
+    .chart-view {
+      border: gray solid 1px;
+      margin: 5px;
+      margin-top: 20px;      
+    }
+
+    .progress {
+      margin-top: 8px;
+    }
+
+    .glyphicon.spinning {
+        animation: spin 1s infinite linear;
+        -webkit-animation: spin2 1s infinite linear;
+    }
+
+    @keyframes spin {
+        from { transform: scale(1) rotate(0deg); }
+        to { transform: scale(1) rotate(360deg); }
+    }
+
+    @-webkit-keyframes spin2 {
+        from { -webkit-transform: rotate(0deg); }
+        to { -webkit-transform: rotate(360deg); }
+    }    
+  </style>
+
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <!-- Main Header -->
+  <header class="main-header">
+
+    <!-- Logo -->
+    <a href="#" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>LV</b></span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>Log</b>VIEW</span>
+    </a>
+
+    <!-- Header Navbar -->
+    <nav class="navbar navbar-static-top" role="navigation">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+    </nav>
+  </header>
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+
+      <!-- Sidebar Menu -->
+      <ul class="sidebar-menu">
+        <li class="active"  id="sidebar-logsetup"><a href="#"><i class="fa fa-link"></i> <span>Log Setup</span></a></li>
+        <li id="sidebar-report"><a href="#"><i class="fa fa-link"></i> <span>Report</span></a></li>
+      </ul>
+      <!-- /.sidebar-menu -->
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <div id="page-loadlog">
+      <!-- Content Header (Page header) -->
+      <div class="row">
+        <div class="col-md-12 header">
+          <h2>
+            Log Setup
+            <small>Initialize log parsing</small>
+          </h2>          
+        </div>
+      </div>
+
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="well">
+          <h3>Remote Log Setup</h3>
+          <form>
+            <div class="form-group">
+              <label for="sftpIPAddress">IP Address</label>
+              <input type="text" class="form-control" id="sftpIPAddress">
+            </div>
+            <div class="form-group">
+              <label for="sftpPort">Port</label>
+              <input type="number" class="form-control" id="sftpPort">
+            </div>
+            <div class="form-group">
+              <label for="sftpUserName">User Name</label>
+              <input type="text" class="form-control" id="sftpUserName">
+            </div>
+            <div class="form-group">
+              <label for="sftpKeyFile">Private Key File</label>
+              <input type="file" id="sftpKeyFile">
+            </div>
+            <div class="form-group">
+              <label for="sftpLogFormat">Log format</label>
+              <input type="text" class="form-control" id="sftpLogFormat">
+            </div>            
+            <div class="row">
+              <div class="col-md-4">
+                <button type="button" id="btnConnectSftp" class="btn btn-default"><span id="btn-loading-rotate" class="hidden"><span class="glyphicon glyphicon-refresh spinning"></span> Connecting</span><span id="btn-loading-static">Connect</span><span id="btn-loading-connected" class="hidden">Disconnect</span></button>
+                <button type="button" id="btnSSHLog" class="btn btn-default" disabled>Start Reading</button>                
+              </div>
+              <div class="col-md-8">
+                <div class="alert alert-danger hidden" id="sftp-error" role="alert"></div>                            
+              </div>
+            </div>
+            <p id="sftpTotalBytesRead"></p>
+          </form>
+        </div>
+
+        <div id="connection"></div>
+        <div class="well">
+          <h3>Local Log Setup</h3>          
+          <form>
+            <div class="form-group">
+              <label for="logInputFile">Select log file</label>
+              <input type="file" id="logInputFile">
+            </div>          
+            <div class="form-group">
+              <label for="logFormat">Log format</label>
+              <input type="text" class="form-control" id="logFormat">
+            </div>
+            <div class="row">
+              <div class="col-md-1">
+                <button type="button" id="btnLoadLog" class="btn btn-default">Load</button>                
+              </div>
+              <div class="col-md-11">
+                <div class="progress">
+                  <div id="load_progress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                    Loading
+                  </div>
+                </div>                
+              </div>
+            </div>            
+          </form>
+        </div>
+        <div id="stats"></div>
+        <div id="unique_ips"></div>
+      </section>
+      <!-- /.content -->
+    </div>      
+    <div id="page-chart" class="hidden">
+      <section class="content-header">
+        <h1>
+          Chart
+          <small>Hourly chart</small>
+        </h1>
+      </section>
+      <section class="content">
+        <div class="row">
+          <div class="col-md-12">          
+            <p class="pull-right">Period <strong><span id="date-range-start"></span></strong> - <strong><span id="date-range-end"></span></strong></p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">          
+            <p class="pull-right">Last updated <strong><span id="date-last-updated"></span><strong></p>                    
+          </div>
+        </div>        
+
+        <div class="row">
+          <div class="col-md-2">
+            <div class="grid-base">
+              <div class="grid-title">
+                Total Requests  
+                <h3 id="grid-stats-total-requests"></h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="grid-base">
+              <div class="grid-title">
+                Unique Visitors
+                <h3 id="grid-stats-unique-vistors"></h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="grid-base">
+              <div class="grid-title">
+                Bandwidth
+                <h3 id="grid-stats-bandwidth"></h3>
+              </div>
+            </div>
+          </div>          
+          <div class="col-md-2">
+            <div class="grid-base">
+              <div class="grid-title">
+                Failed Requests
+                <h3 id="grid-stats-failed-requests"></h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="grid-base">
+              <div class="grid-title">
+                Data Processed
+                <h3 id="grid-stats-data-processed"></h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="grid-base">
+              <div class="grid-title">
+                Average Request Time
+                <h3 id="grid-stats-avg-request-time"></h3>
+              </div>
+            </div>
+          </div>          
+        </div>
+        <div class="row chart-view">
+          <div class="col-md-12">
+            <canvas id="requestChart"></canvas>
+          </div>
+        </div>
+        <div class="row chart-view">          
+          <div class="col-md-12">          
+            <canvas id="avgTimeChart"></canvas>        
+          </div>
+        </div>
+        <div class="row chart-view">                    
+          <div class="col-md-12">                      
+            <canvas id="totalSizeChart"></canvas>                
+          </div>
+        </div>
+        <div class="row chart-view">                    
+          <div class="col-md-12">                      
+            <canvas id="statusCodesChart"></canvas>                
+          </div>
+        </div>        
+        <div class="row chart-view">                    
+          <div class="col-md-12">                      
+            <canvas id="fullViewChart"></canvas>                        
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <!-- /.content-wrapper -->
+<!-- ./wrapper -->
+
+<!-- REQUIRED JS SCRIPTS -->
+
+<!-- jQuery 2.2.3 -->
+<script src="./node_modules/chart.js/dist/Chart.bundle.min.js" type="text/javascript" charset="utf-8"></script>    
+<script>window.$ = window.jQuery = require('jquery');</script>    
+<!-- Bootstrap 3.3.6 -->
+<script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="./node_modules/admin-lte/dist/js/app.min.js"></script>
+
+<!-- Optionally, you can add Slimscroll and FastClick plugins.
+     Both of these plugins are recommended to enhance the
+     user experience. Slimscroll is required when using the
+     fixed layout. -->
+</body>
+</html>
+</html>

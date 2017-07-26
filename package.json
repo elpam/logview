@@ -1,0 +1,33 @@
+{
+  "name": "logview",
+  "version": "0.1.0",
+  "description": "Real-time web log viewer application built with Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/elpam/logview",
+  "keywords": [
+    "apache",
+    "nginx",
+    "log",
+    "real-time",
+    "viewer"
+  ],
+  "author": "elpam",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "~1.6.2"
+  },
+  "dependencies": {
+    "admin-lte": "^2.3.11",
+    "bootstrap": "^3.3.7",
+    "chart.js": "^2.6.0",
+    "jquery": "^3.2.1",
+    "moment": "^2.18.1",
+    "electron-store": "~1.2.0",
+    "promise-sftp": "~0.10.0",
+    "alpine" : "~0.2.1",
+    "through2" : "~2.0.3"
+  }
+}
