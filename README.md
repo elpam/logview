@@ -10,7 +10,7 @@ create an issue.
 ## Get Started
 
 ```bash
-$ git clone https://github.com/cielito-lindo-productions/primitive.nextgen.git
+$ git clone https://github.com/elpam/logview.git
 $ npm install
 $ npm start
 ```
