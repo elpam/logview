@@ -274,6 +274,14 @@ window.onload = function() {
         document.getElementById('sftpLogFormat').value = store.get('lastSftpLogFormat');            
     }    
 
+    if (store.has('lastSftpLogPath')) {
+        document.getElementById('sftpLogPath').value = store.get('lastSftpLogPath');            
+    }        
+
+    if (store.has('lastSftpLogFileName')) {
+        document.getElementById('sftpLogFileName').value = store.get('lastSftpLogFileName');            
+    }        
+
   document.getElementById('sidebar-logsetup').onclick = function() {
     document.getElementById('sidebar-logsetup').classList.add('active');
     document.getElementById('sidebar-report').classList.remove('active');    
@@ -582,7 +590,10 @@ window.onload = function() {
   }
 
   function loadDataSFTP(startPos, endPos) {
-    promiseSftp.createReadStream('/var/log/httpd-access.log', {start: startPos, end: endPos, autoClose: true, encoding: 'UTF8'}).then(
+    var logPath = document.getElementById('sftpLogPath').value;
+    var logFileName = document.getElementById('sftpLogFileName').value;
+      
+    promiseSftp.createReadStream(logPath + logFileName, {start: startPos, end: endPos, autoClose: true, encoding: 'UTF8'}).then(
         function(dataStream) {
             var sftpBytesRead = document.getElementById('sftpTotalBytesRead');
             var logFormat = document.getElementById('sftpLogFormat').value;
@@ -624,10 +635,13 @@ window.onload = function() {
           return;
       }
 
-      promiseSftp.list('/var/log/').then(function(details) {
+      var logPath = document.getElementById('sftpLogPath').value;
+      var logFileName = document.getElementById('sftpLogFileName').value;
+
+      promiseSftp.list(logPath).then(function(details) {
         details.forEach( function (record)
         {
-            if (record.name == "httpd-access.log" && record.size != previousLogSize) {
+            if (record.name == logFileName && record.size != previousLogSize) {
                 console.log("Old log size= " + previousLogSize);
                 console.log("New log size= " + record.size);
                 reading = true;                
@@ -647,11 +661,16 @@ window.onload = function() {
     var userName = document.getElementById('sftpUserName').value;
     var keyFile = document.getElementById('sftpKeyFile').files[0].path;            
     var logFormat = document.getElementById('sftpLogFormat').value;
+    var logPath = document.getElementById('sftpLogPath').value;
+    var logFileName = document.getElementById('sftpLogFileName').value;
+
 
     store.set('lastSftpIpAddress', ipAddress);    
     store.set('lastSftpPort', port);    
     store.set('lastSftpUserName', userName);      
-    store.set('lastSftpLogFormat', logFormat)  
+    store.set('lastSftpLogFormat', logFormat);  
+    store.set('lastSftpLogPath', logPath);  
+    store.set('lastSftpLogFileName', logFileName);          
 
     var status = promiseSftp.getConnectionStatus();
     if (status == "connected") {
