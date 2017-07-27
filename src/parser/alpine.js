@@ -50,13 +50,11 @@ function parseReadStream(stream, callback) {
     var thisAlpine = this;
     var stream = byline.createStream(stream);
     stream.pipe(through2.obj(function(chunk, enc, t2callback) {
-        try {
-            var data = thisAlpine.parseLine(chunk.toString());
+        var data = thisAlpine.parseLine(chunk.toString());
+        if (data !== null) {
+            callback(data);
         }
-        catch (err) {
-            callback(null); // parsing error, quit and try again next time.
-        }
-        callback(data);
+
         var ret = t2callback();
     }))
     .on('finish', function () {
@@ -86,13 +84,13 @@ function parseLine(line) {
         var val;
         if (field.isQuoted) {
             if (!(buf.lookingAt() === '"'))
-                throw new Error("Field defined as quoted was not quoted");
+                return null;
             buf.skip();
             val = buf.getUpto('"');
             buf.skip();
         } else if (field.isDate) {
             if (!(buf.lookingAt() === '['))
-                throw new Error("Time field is not enclosed in brackets");
+                return null;
             buf.skip();
             val = buf.getUpto(']');
             buf.skip();
