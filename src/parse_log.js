@@ -23,13 +23,18 @@ class Stats {
     }
 
     addStat(data) {
+        // get hour stamp and check if we have an hourly entry
+        // we need atleast a timestamp to create an entry
+        if (data['time'] === undefined) {
+             return false;
+        }
+
         // skip entries for:
         // "Apache/2.4.25 (FreeBSD) (internal dummy connection)"
         // 408 timeouts as the are health checks from AWS
         //if ((data["remoteHost"].indexOf("172.31") !== -1 && data["status"] == 408) || (data["RequestHeader User-Agent"].indexOf("internal dummy connection") !== -1))
         //    return false;
 
-        // get hour stamp and check if we have an hourly entry
         var hour_stamp = data["time"];
         hour_stamp = hour_stamp.substring(0, hour_stamp.lastIndexOf(':') - 2) + "00";
 
@@ -605,6 +610,9 @@ window.onload = function() {
                             totalBytesRead += data.originalLine.length;
                             previousLogSize += data.originalLine.length + 1;
                             sftpBytesRead.innerHTML = "Total bytes read = " + (totalBytesRead + 1);
+                        }
+                        else {
+                            previousLogSize += data.originalLine.length + 1;                            
                         }
                     }
                     else {
