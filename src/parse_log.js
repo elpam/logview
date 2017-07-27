@@ -570,6 +570,7 @@ window.onload = function() {
 
   function updateReport() {
     if (requestChart == null) {
+        document.getElementById("report-view").classList.remove('hidden');
         createCharts();
     }
     else {

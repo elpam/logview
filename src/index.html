@@ -212,95 +212,96 @@
     <div id="page-chart" class="hidden">
       <section class="content-header">
         <h1>
-          Chart
-          <small>Hourly chart</small>
+          Report
+          <small>Hourly Data</small>
         </h1>
       </section>
       <section class="content">
-        <div class="row">
-          <div class="col-md-12">          
-            <p class="pull-right">Period <strong><span id="date-range-start"></span></strong> - <strong><span id="date-range-end"></span></strong></p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">          
-            <p class="pull-right">Last updated <strong><span id="date-last-updated"></span><strong></p>                    
-          </div>
-        </div>        
-
-        <div class="row">
-          <div class="col-md-2">
-            <div class="grid-base">
-              <div class="grid-title">
-                Total Requests  
-                <h3 id="grid-stats-total-requests"></h3>
-              </div>
+        <div id="report-view" class="hidden">        
+          <div class="row">
+            <div class="col-md-12">          
+              <p class="pull-right">Period <strong><span id="date-range-start"></span></strong> - <strong><span id="date-range-end"></span></strong></p>
             </div>
           </div>
-          <div class="col-md-2">
-            <div class="grid-base">
-              <div class="grid-title">
-                Unique Visitors
-                <h3 id="grid-stats-unique-vistors"></h3>
+          <div class="row">
+            <div class="col-md-12">          
+              <p class="pull-right">Last updated <strong><span id="date-last-updated"></span><strong></p>                    
+            </div>
+          </div>        
+          <div class="row">
+            <div class="col-md-2">
+              <div class="grid-base">
+                <div class="grid-title">
+                  Total Requests  
+                  <h3 id="grid-stats-total-requests"></h3>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-2">
-            <div class="grid-base">
-              <div class="grid-title">
-                Bandwidth
-                <h3 id="grid-stats-bandwidth"></h3>
+            <div class="col-md-2">
+              <div class="grid-base">
+                <div class="grid-title">
+                  Unique Visitors
+                  <h3 id="grid-stats-unique-vistors"></h3>
+                </div>
               </div>
             </div>
-          </div>          
-          <div class="col-md-2">
-            <div class="grid-base">
-              <div class="grid-title">
-                Failed Requests
-                <h3 id="grid-stats-failed-requests"></h3>
+            <div class="col-md-2">
+              <div class="grid-base">
+                <div class="grid-title">
+                  Bandwidth
+                  <h3 id="grid-stats-bandwidth"></h3>
+                </div>
+              </div>
+            </div>          
+            <div class="col-md-2">
+              <div class="grid-base">
+                <div class="grid-title">
+                  Failed Requests
+                  <h3 id="grid-stats-failed-requests"></h3>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-2">
-            <div class="grid-base">
-              <div class="grid-title">
-                Data Processed
-                <h3 id="grid-stats-data-processed"></h3>
+            <div class="col-md-2">
+              <div class="grid-base">
+                <div class="grid-title">
+                  Data Processed
+                  <h3 id="grid-stats-data-processed"></h3>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-2">
-            <div class="grid-base">
-              <div class="grid-title">
-                Average Request Time
-                <h3 id="grid-stats-avg-request-time"></h3>
+            <div class="col-md-2">
+              <div class="grid-base">
+                <div class="grid-title">
+                  Average Request Time
+                  <h3 id="grid-stats-avg-request-time"></h3>
+                </div>
               </div>
+            </div>          
+          </div>
+          <div class="row chart-view">
+            <div class="col-md-12">
+              <canvas id="requestChart"></canvas>
             </div>
-          </div>          
-        </div>
-        <div class="row chart-view">
-          <div class="col-md-12">
-            <canvas id="requestChart"></canvas>
           </div>
-        </div>
-        <div class="row chart-view">          
-          <div class="col-md-12">          
-            <canvas id="avgTimeChart"></canvas>        
+          <div class="row chart-view">          
+            <div class="col-md-12">          
+              <canvas id="avgTimeChart"></canvas>        
+            </div>
           </div>
-        </div>
-        <div class="row chart-view">                    
-          <div class="col-md-12">                      
-            <canvas id="totalSizeChart"></canvas>                
+          <div class="row chart-view">                    
+            <div class="col-md-12">                      
+              <canvas id="totalSizeChart"></canvas>                
+            </div>
           </div>
-        </div>
-        <div class="row chart-view">                    
-          <div class="col-md-12">                      
-            <canvas id="statusCodesChart"></canvas>                
-          </div>
-        </div>        
-        <div class="row chart-view">                    
-          <div class="col-md-12">                      
-            <canvas id="fullViewChart"></canvas>                        
+          <div class="row chart-view">                    
+            <div class="col-md-12">                      
+              <canvas id="statusCodesChart"></canvas>                
+            </div>
+          </div>        
+          <div class="row chart-view">                    
+            <div class="col-md-12">                      
+              <canvas id="fullViewChart"></canvas>                        
+            </div>
           </div>
         </div>
       </section>
