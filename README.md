@@ -7,7 +7,7 @@ This project is in its early stages and is rough around the edges,
 but it works! If something is broken or missing create please
 create an issue.
 
-![LogVIEW Screenshot](https://github.com/elpam/logview/blob/master/images/logview.png)
+![LogVIEW Screenshot](images/logview.png)
 
 ## Get Started
 
