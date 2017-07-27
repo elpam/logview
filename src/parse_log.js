@@ -568,6 +568,19 @@ window.onload = function() {
     }                        
   }
 
+  function updateReport() {
+    if (requestChart == null) {
+        createCharts();
+    }
+    else {
+        updateCharts();
+    }                          
+
+    updatedDateRange();
+    setLastModifiedNow();
+    setTopStats();           
+  }
+
   function setTopStats() {
     var statsTotalRequests = document.getElementById("grid-stats-total-requests");
     statsTotalRequests.innerHTML = data_stats.getTotalRequests();
@@ -597,7 +610,8 @@ window.onload = function() {
   function loadDataSFTP(startPos, endPos) {
     var logPath = document.getElementById('sftpLogPath').value;
     var logFileName = document.getElementById('sftpLogFileName').value;
-      
+    var recordsRead = 0;
+
     promiseSftp.createReadStream(logPath + logFileName, {start: startPos, end: endPos, autoClose: true, encoding: 'UTF8'}).then(
         function(dataStream) {
             var sftpBytesRead = document.getElementById('sftpTotalBytesRead');
@@ -607,25 +621,22 @@ window.onload = function() {
                 function(data, bytesRead) {
                     if (data != null) {
                         if (data_stats.addStat(data)) {
+                            recordsRead += 1;
                             totalBytesRead += data.originalLine.length;
                             previousLogSize += data.originalLine.length + 1;
                             sftpBytesRead.innerHTML = "Total bytes read = " + (totalBytesRead + 1);
+
+                            if (recordsRead > 1000) {
+                                updateReports();
+                                recordsRead = 0;
+                            }
                         }
                         else {
                             previousLogSize += data.originalLine.length + 1;                            
                         }
                     }
                     else {
-                        updatedDateRange();
-                        setLastModifiedNow();
-                        setTopStats();
-
-                        if (requestChart == null) {
-                            createCharts();
-                        }
-                        else {
-                            updateCharts();
-                        }
+                        updateReports();
                         reading = false;
                     }
                 }
@@ -781,6 +792,8 @@ window.onload = function() {
 
     store.set('lastLogFormat', logFormat);    
 
+    var recordsRead = 0;
+
     alpine.parseReadStream(fs.createReadStream(logFile, {encoding: "utf8"}), 
         function(data, bytesRead) {
             if (data == null) {
@@ -788,18 +801,21 @@ window.onload = function() {
                 load_progress.style.width =  "100%";                
                 load_progress.setAttribute("aria-valuenow","100%");
                 data_stats.getTotalStats(totalStats);
-
-                createCharts();
-                updatedDateRange();
-                setLastModifiedNow();
-                setTopStats();
+                updateReport();
             }
             else {
                 if (data_stats.addStat(data)) {
                     totalBytesRead += data.originalLine.length; 
                     var percentComplete = Math.trunc((totalBytesRead / logFileSize) * 100);
                     load_progress.style.width =  percentComplete + "%";
-                    load_progress.setAttribute("aria-valuenow", percentComplete +"%");                
+                    load_progress.setAttribute("aria-valuenow", percentComplete +"%");
+                    
+                    recordsRead += 1;
+
+                    if (recordsRead > 1000) {
+                        updateReport();
+                        recordsRead = 0;
+                    }
                 }
             }
 
