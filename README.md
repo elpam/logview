@@ -4,8 +4,10 @@ LogView is a real-time web log viewer application built with Electron.
 In addition, local web log files can be opened and viewed.
 
 This project is in its early stages and is rough around the edges,
-but it works! If something is broken or missing create an please
+but it works! If something is broken or missing create please
 create an issue.
+
+![LogVIEW Screenshot](https://github.com/elpam/logview/blob/master/images/logview.png)
 
 ## Get Started
 
